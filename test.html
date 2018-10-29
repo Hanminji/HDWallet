@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>HDWallet</title>
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+
+
+    <script type="text/javascript" src="js/wordlist_english.js"></script>
+    <script type="text/javascript" src="js/wordlist_korean.js"></script>
+    <script type="text/javascript" src="js/sjcl-bip39.js"></script>
+    <script type="text/javascript" src="js/jsbip39.js"></script>
+
+    <script type="text/javascript" src="js/test.js"></script>
+</head>
+
+<body>
+    <p style="color: chocolate">1. Generate HD Key</p>
+    <select name="language">
+        <option value="english">English</option>
+        <option value="korean">Korean</option>
+    </select>
+    <br>
+    <button id="generateBtn">Generate HD Key</button>
+    <p>생성된 단어:</p>
+    <p id="wordResult"></p>
+
+
+</body>
+
+</html>
