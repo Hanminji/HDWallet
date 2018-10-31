@@ -28,14 +28,13 @@ window.onload = function() {
     console.log(words)
     $("#wordResult").text(words)
 
-    //FIXME: 지금 현재는 passphrase가 공백인 상태, 사용자가 passphrase를 입력할 수 도 있게 수정해야함
-    calcBip32RootKeyFromSeed(words, "")
+    calcBip32RootKeyFromSeed(words, $("#passPhrase_gen").val())
     // getBitcoinAddress(words, "")
   })
 
   document.getElementById("restoreBtn").addEventListener("click", event => {
     $("#resultDiv").show()
-    calcBip32RootKeyFromSeed($("#seedPhrase").val(), "")
+    calcBip32RootKeyFromSeed($("#seedPhrase").val(), $("#passPhrase_res").val())
   })
 
   var calcBip32RootKeyFromSeed = (phrase, passphrase) => {
