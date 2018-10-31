@@ -15,6 +15,7 @@ window.onload = function() {
     var numWords = 12
     var strength = (numWords / 3) * 32
     var buffer = new Uint8Array(strength / 8)
+
     console.log("numWords: " + numWords)
     console.log("strength: " + strength)
     console.log("buffer: " + buffer + "\n")
@@ -32,22 +33,22 @@ window.onload = function() {
     // getBitcoinAddress(words, "")
   })
 
+  document.getElementById("restoreBtn").addEventListener("click", event => {
+    $("#resultDiv").show()
+    calcBip32RootKeyFromSeed($("#seedPhrase").val(), "")
+  })
+
   var calcBip32RootKeyFromSeed = (phrase, passphrase) => {
     // console.log(phrase + " " + passphrase)
     var seed = mnemonic.toSeed(phrase, passphrase)
     bip32RootKey = bitcoinjs.bitcoin.HDNode.fromSeedHex(seed, network)
     $("#bipRootKey").text(JSON.stringify(bip32RootKey))
-    getBitcoinAddress()
+    getAddress(44, 0, 0, 0)
+    getAddress(44, 60, 0, 0)
+    // getEthereumAddress()
   }
 
-  var getBitcoinAddress = () => {
-    // purpose: standard BIP num
-    // coin: coinType(bitcoin:0)
-    var purpose = "44"
-    var coin = "0"
-    var account = "0"
-    var change = "0"
-
+  var getAddress = (purpose, coin, account, change) => {
     var path = "m/"
     path += purpose + "'/"
     path += coin + "'/"
@@ -58,9 +59,29 @@ window.onload = function() {
     var address = keyPair.getAddress().toString()
     var privKey = keyPair.toWIF()
     var pubKey = keyPair.getPublicKeyBuffer().toString("hex")
-    $("#btcPath").text(path)
-    $("#btcPubKey").text(pubKey)
-    $("#btcAddress").text(address)
-    $("#btcPrivKey").text(privKey)
+
+    // coin:0(BTC)
+    if (coin == 0) {
+      $("#btcPath").text(path)
+      $("#btcPubKey").text(pubKey)
+      $("#btcAddress").text(address)
+      $("#btcPrivKey").text(privKey)
+    }
+    // coin:60)ETH
+    else if (coin == 60) {
+      var privKeyBuffer = keyPair.d.toBuffer(32)
+      privKey = privKeyBuffer.toString("hex")
+      var addressBuffer = ethUtil.privateToAddress(privKeyBuffer)
+      var hexAddress = addressBuffer.toString("hex")
+      var checksumAddress = ethUtil.toChecksumAddress(hexAddress)
+      address = ethUtil.addHexPrefix(checksumAddress)
+      privKey = ethUtil.addHexPrefix(privKey)
+      pubKey = ethUtil.addHexPrefix(pubKey)
+
+      $("#ethPath").text(path)
+      $("#ethPubKey").text(pubKey)
+      $("#ethAddress").text(address)
+      $("#ethPrivKey").text(privKey)
+    }
   }
 }
